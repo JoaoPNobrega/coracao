@@ -3,7 +3,6 @@ import SplitSection from "@/components/SplitSection";
 import Pulse from "@/components/Pulse";
 import Specialties from "@/components/Specialties";
 import Audiences from "@/components/Audiences";
-import Credentials from "@/components/Credentials";
 import Contact from "@/components/Contact";
 
 const Index = () => {
@@ -12,20 +11,20 @@ const Index = () => {
       <div className="relative z-[2] mx-auto max-w-[1240px] px-8">
         <Hero />
         <div className="h-px bg-line" />
-        <SplitSection />
       </div>
 
-      {/* Pulse é full-bleed (fundo escuro) */}
-      <Pulse />
+      <div className="relative z-[2] bg-[#100d0c]">
+        <div className="mx-auto max-w-[1240px] px-8">
+          <SplitSection />
+        </div>
+        <Pulse />
+      </div>
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-8">
         <Specialties />
         <div className="h-px bg-line" />
         <Audiences />
       </div>
-
-      {/* Credentials tem fundo próprio (secondary), então sai do container */}
-      <Credentials />
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-8">
         <Contact />

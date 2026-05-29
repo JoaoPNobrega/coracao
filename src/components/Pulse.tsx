@@ -1,34 +1,57 @@
 import { useEffect, useRef, useState } from "react";
 
-// monta 3 batimentos com longos repousos entre eles dentro de um viewBox 1600x200
+const credentials = [
+  {
+    period: "Pós-doutorado",
+    place: "Harvard Medical School",
+    detail: "Brigham and Women's Hospital · Ciências Cardiovasculares · Boston, EUA",
+  },
+  {
+    period: "Doutorado",
+    place: "IMIP",
+    detail: "Saúde Integral · Instituto de Medicina Integral Prof. Fernando Figueira",
+  },
+  {
+    period: "Mestrado",
+    place: "UFPE",
+    detail: "Cirurgia · Universidade Federal de Pernambuco",
+  },
+  {
+    period: "Atuação atual",
+    place: "Recife — PE",
+    detail:
+      "Coordenação de residência médica, gestão em cardiologia e cirurgia cardiovascular em serviços de referência",
+  },
+];
+
 const buildBeatPath = () => {
-  const starts = [220, 720, 1220];
+  const starts = [160, 600, 1040, 1480];
   let d = "M 0 100";
+
   for (const x of starts) {
     d += ` L ${x} 100`;
-    d += ` L ${x + 20} 100`;
-    d += ` Q ${x + 30} 100 ${x + 38} 82`; // P sobe
-    d += ` Q ${x + 48} 65 ${x + 58} 82`;
-    d += ` Q ${x + 66} 100 ${x + 75} 100`;
-    d += ` L ${x + 90} 100`; // PR
-    d += ` L ${x + 96} 105`; // Q
-    d += ` L ${x + 103} 18`; // R (pico)
-    d += ` L ${x + 110} 180`; // S (vale)
-    d += ` L ${x + 117} 100`;
-    d += ` L ${x + 135} 100`; // ST
-    d += ` Q ${x + 150} 100 ${x + 160} 78`; // T sobe
-    d += ` Q ${x + 175} 50 ${x + 190} 78`;
-    d += ` Q ${x + 200} 100 ${x + 215} 100`;
-    d += ` L ${x + 260} 100`; // pós-T
+    d += ` Q ${x + 18} 100 ${x + 28} 82`;
+    d += ` Q ${x + 40} 62 ${x + 54} 84`;
+    d += ` Q ${x + 64} 100 ${x + 78} 100`;
+    d += ` L ${x + 94} 100`;
+    d += ` L ${x + 101} 108`;
+    d += ` L ${x + 110} 18`;
+    d += ` L ${x + 119} 178`;
+    d += ` L ${x + 128} 100`;
+    d += ` L ${x + 152} 100`;
+    d += ` Q ${x + 174} 100 ${x + 188} 76`;
+    d += ` Q ${x + 206} 48 ${x + 226} 78`;
+    d += ` Q ${x + 240} 100 ${x + 260} 100`;
   }
-  d += " L 1600 100";
+
+  d += " L 1800 100";
   return d;
 };
 
 const BEAT_PATH = buildBeatPath();
 
 const Pulse = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const [inView, setInView] = useState(false);
   const [len, setLen] = useState(5000);
@@ -40,152 +63,124 @@ const Pulse = () => {
   }, []);
 
   useEffect(() => {
-    const obs = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
-          obs.disconnect();
+          observer.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.25 },
     );
-    if (sectionRef.current) obs.observe(sectionRef.current);
-    return () => obs.disconnect();
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="bg-cream px-6 py-[100px] sm:px-8 md:py-[140px]"
+      id="formacao"
+      className="relative -mt-[18vh] min-h-[208vh] overflow-x-clip bg-[#100d0c] px-6 pt-[18vh] text-[#f7efe8] sm:px-8 md:min-h-[248vh]"
     >
-      <div className="mx-auto max-w-[1240px]">
-        <div className="mb-10 flex items-end justify-between gap-6">
-          <div className="inline-flex items-center gap-3 font-mono text-[12px] uppercase tracking-[0.18em] text-muted">
-            <span className="inline-block h-px w-7 bg-muted" />
-            Princípio
-          </div>
-          <span className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-muted md:inline">
-            Heart Team · Cuidado Compartilhado
-          </span>
-        </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.22)_0%,rgba(0,0,0,0.12)_14%,transparent_30%,rgba(0,0,0,0.22)_100%),linear-gradient(90deg,rgba(0,0,0,0.48),transparent_30%,transparent_70%,rgba(0,0,0,0.4))]"
+      />
 
-        {/* monitor card */}
-        <div
-          className="relative isolate overflow-hidden rounded-[2.5rem] border border-ink/15 bg-ink text-cream"
-          style={{
-            boxShadow:
-              "0 40px 80px -24px rgba(26,22,20,0.42), 0 12px 24px -12px rgba(26,22,20,0.28), inset 0 1px 0 0 hsl(36 33% 96% / 0.06)",
-          }}
-        >
-          {/* halo sutil interno */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(120% 80% at 50% 110%, hsl(353 56% 50% / 0.16), transparent 60%)",
-            }}
-          />
+      <div className="sticky top-0 flex min-h-screen items-center">
+        <div className="relative mx-auto w-full max-w-[1240px]">
+          <div className="relative isolate overflow-hidden pb-10 pt-2 md:pb-16">
+            <div className="pointer-events-none absolute inset-x-[-18vw] top-[36%] z-0 h-[46%] opacity-70 md:top-[38%]">
+            <div
+              className="absolute inset-0 opacity-[0.12]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right, hsl(var(--cream) / 0.2) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--cream) / 0.16) 1px, transparent 1px)",
+                backgroundSize: "40px 40px",
+                maskImage:
+                  "linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%)",
+              }}
+            />
 
-          {/* top chrome */}
-          <div className="relative flex items-center justify-between border-b border-cream/10 px-7 py-5 font-mono text-[10px] uppercase tracking-[0.22em] text-cream/45 md:px-12">
-            <div className="flex items-center gap-3">
-              <span
-                className="inline-block h-2 w-2 rounded-full bg-ember"
-                style={{ animation: "ping 1.4s ease-out infinite" }}
-              />
-              <span>ECG · Derivação II · 25mm/s</span>
-            </div>
-            <span className="hidden md:inline">Spec · 003 / 2026</span>
-          </div>
-
-          {/* corpo */}
-          <div className="relative px-7 pb-10 pt-14 sm:px-10 md:px-16 md:pb-14 md:pt-20">
-            <h2 className="max-w-[22ch] font-display text-[clamp(36px,5.6vw,84px)] font-light leading-[1.02] tracking-[-0.028em]">
-              Toda cirurgia começa muito antes da sala — começa em uma{" "}
-              <em className="font-light italic text-ember">decisão</em> tomada em equipe.
-            </h2>
-
-            {/* ECG canvas */}
-            <div className="relative mt-14 h-[160px] w-full md:mt-20 md:h-[220px]">
-              {/* grid medical */}
-              <div
-                className="absolute inset-0 opacity-[0.16]"
+            <svg
+              viewBox="0 0 1800 200"
+              preserveAspectRatio="none"
+              className="absolute inset-0 block h-full w-full overflow-visible"
+            >
+              <path
+                ref={pathRef}
+                d={BEAT_PATH}
+                fill="none"
+                stroke="hsl(var(--ember))"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.6}
+                vectorEffect="non-scaling-stroke"
                 style={{
-                  backgroundImage:
-                    "linear-gradient(to right, hsl(var(--cream) / 0.22) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--cream) / 0.22) 1px, transparent 1px)",
-                  backgroundSize: "40px 40px",
-                  maskImage:
-                    "linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%)",
-                  WebkitMaskImage:
-                    "linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%)",
-                }}
-              />
-
-              <svg
-                viewBox="0 0 1600 200"
-                preserveAspectRatio="none"
-                className="block h-full w-full overflow-visible"
-              >
-                <path
-                  ref={pathRef}
-                  d={BEAT_PATH}
-                  fill="none"
-                  stroke="hsl(var(--ember))"
-                  strokeWidth={1.4}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  vectorEffect="non-scaling-stroke"
-                  style={{
-                    strokeDasharray: len,
-                    strokeDashoffset: inView ? 0 : len,
-                    transition:
-                      "stroke-dashoffset 6.2s cubic-bezier(.55,0,.18,1)",
-                    filter:
-                      "drop-shadow(0 0 10px hsl(var(--ember) / 0.55)) drop-shadow(0 0 22px hsl(var(--ember) / 0.18))",
-                    animation: inView
-                      ? "pulseStroke 1.6s ease-in-out 6.4s infinite"
-                      : undefined,
-                  }}
-                />
-              </svg>
-
-              {/* ponto vivo no fim */}
-              <span
-                className="absolute right-[1%] top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-ember opacity-0"
-                style={{
+                  strokeDasharray: len,
+                  strokeDashoffset: inView ? 0 : len,
+                  transition:
+                    "stroke-dashoffset 5.8s cubic-bezier(.55,0,.18,1)",
+                  filter:
+                    "drop-shadow(0 0 10px hsl(var(--ember) / 0.65)) drop-shadow(0 0 26px hsl(var(--ember) / 0.25))",
                   animation: inView
-                    ? "appear .4s ease 6.4s forwards, ping 1.6s ease-out 6.4s infinite"
+                    ? "pulseStroke 1.6s ease-in-out 6s infinite"
                     : undefined,
-                  boxShadow: "0 0 16px hsl(var(--ember) / 0.85)",
                 }}
               />
+            </svg>
+          </div>
+
+            <div className="relative z-10 text-center">
+            <div className="mb-7 inline-flex items-center gap-4 font-mono text-[12px] uppercase tracking-[0.2em] text-[#b9aaa3]">
+              <span className="inline-block h-px w-7 bg-[#8f7770]" />
+              Formação
+              <span className="inline-block h-px w-7 bg-[#8f7770]" />
+            </div>
+            <h2 className="mx-auto max-w-[19ch] font-display text-[clamp(36px,5vw,72px)] font-light leading-[1.02] tracking-[-0.025em] text-[#fbf6f0] xl:max-w-none xl:whitespace-nowrap">
+              Uma trajetória feita de{" "}
+              <em className="font-light italic text-[#ff7a86]">estudo</em>,
+              prática e ensino.
+            </h2>
+          </div>
+
+            <div className="relative z-10 mt-16 grid gap-4 md:mt-20 md:grid-cols-4">
+              {credentials.map((item, index) => (
+                <article
+                  key={item.place}
+                  className="min-h-[250px] rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-6 opacity-0 shadow-[0_24px_70px_rgb(0_0_0_/_0.24),inset_0_1px_0_rgb(255_255_255_/_0.08)] backdrop-blur-xl transition-[opacity,transform,filter]"
+                  style={{
+                    opacity: inView ? 1 : 0,
+                    transform: inView ? "translate3d(0, 0, 0)" : "translate3d(0, 22px, 0)",
+                    filter: inView ? undefined : "blur(10px)",
+                    transitionDuration: "1400ms",
+                    transitionTimingFunction: "cubic-bezier(.2,.7,.2,1)",
+                    transitionDelay: `${7000 + index * 850}ms`,
+                  }}
+                >
+                  <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#d7c5bd]/65">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <div className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-[#ff9aa3]">
+                    {item.period}
+                  </div>
+                  <h3 className="mt-3 font-display text-[30px] font-light leading-tight tracking-tight text-[#fbf6f0]">
+                    {item.place}
+                  </h3>
+                  <p className="mt-5 text-[14px] leading-[1.6] text-[#eaded6]/72">
+                    {item.detail}
+                  </p>
+                </article>
+              ))}
             </div>
           </div>
-
-          {/* bottom chrome */}
-          <div className="relative grid grid-cols-2 gap-y-6 border-t border-cream/10 px-7 py-7 md:grid-cols-4 md:px-16">
-            {[
-              { k: "BPM", v: "72" },
-              { k: "Ritmo", v: "Sinusal" },
-              { k: "PR / QT", v: "160 · 380" },
-              { k: "Eixo", v: "+60°" },
-            ].map((item, i) => (
-              <div key={item.k} className={i >= 2 ? "hidden md:block" : ""}>
-                <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-cream/35">
-                  {item.k}
-                </div>
-                <div className="mt-1.5 font-display text-[26px] font-light leading-none tracking-tight">
-                  {item.v}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
-
-        {/* legenda discreta abaixo */}
-        <p className="mx-auto mt-8 max-w-[58ch] text-center font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-          Visualização ilustrativa · ritmo sinusal normal — figura decorativa
-        </p>
       </div>
     </section>
   );
