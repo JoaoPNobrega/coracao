@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import SplitSection from "@/components/SplitSection";
+import Pulse from "@/components/Pulse";
 import Specialties from "@/components/Specialties";
 import Audiences from "@/components/Audiences";
 import Credentials from "@/components/Credentials";
@@ -14,7 +15,12 @@ const Index = () => {
         <Hero />
         <div className="h-px bg-line" />
         <SplitSection />
-        <div className="h-px bg-line" />
+      </div>
+
+      {/* Pulse é full-bleed (fundo escuro) */}
+      <Pulse />
+
+      <div className="relative z-[2] mx-auto max-w-[1240px] px-8">
         <Specialties />
         <div className="h-px bg-line" />
         <Audiences />

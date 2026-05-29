@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const FRAME_COUNT = 240;
+const FRAME_COUNT = 97;
 const FRAME_WIDTH = 1280;
 const FRAME_HEIGHT = 720;
 
@@ -152,12 +152,6 @@ const HeartScrollSequence = () => {
               backgroundImage:
                 "repeating-linear-gradient(45deg, hsl(var(--ink) / 0.025) 0 2px, transparent 2px 14px)",
             }}
-          />
-          <img
-            src={getFrameSrc(0)}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-contain"
           />
           <canvas
             ref={canvasRef}

@@ -118,4 +118,13 @@
       box-shadow: 0 0 0 0 hsl(var(--ember) / 0);
     }
   }
+
+  @keyframes ecgFlow {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
