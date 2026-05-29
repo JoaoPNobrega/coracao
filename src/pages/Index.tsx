@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import SplitSection from "@/components/SplitSection";
 import Pulse from "@/components/Pulse";
@@ -11,7 +10,6 @@ const Index = () => {
   return (
     <>
       <div className="relative z-[2] mx-auto max-w-[1240px] px-8">
-        <Navbar />
         <Hero />
         <div className="h-px bg-line" />
         <SplitSection />

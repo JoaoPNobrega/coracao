@@ -62,16 +62,25 @@ const Specialties = () => {
         </p>
       </div>
 
-      <div className="grid gap-px overflow-hidden border border-line bg-line md:grid-cols-2 lg:grid-cols-4">
+      <div
+        className="grid gap-px overflow-hidden rounded-[2rem] border border-line bg-line md:grid-cols-2 lg:grid-cols-4"
+        style={{
+          boxShadow:
+            "0 20px 40px -28px rgba(26,22,20,0.16), 0 4px 12px -8px rgba(26,22,20,0.08)",
+        }}
+      >
         {areas.map((a) => (
           <article
             key={a.n}
-            className="group relative bg-cream p-7 transition-colors duration-300 hover:bg-popover"
+            className="group relative overflow-hidden bg-cream p-8 transition-colors duration-300 hover:bg-popover"
           >
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-burgundy">
-              {a.n}
-            </span>
-            <h3 className="mt-5 font-display text-[22px] font-light leading-[1.15] tracking-tight">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-burgundy">
+                {a.n}
+              </span>
+              <span className="h-1.5 w-1.5 rounded-full bg-burgundy/40 transition-all duration-300 group-hover:bg-burgundy" />
+            </div>
+            <h3 className="mt-6 font-display text-[22px] font-light leading-[1.15] tracking-tight">
               {a.title}
             </h3>
             <p className="mt-3 text-[14px] leading-[1.55] text-ink-soft">{a.desc}</p>

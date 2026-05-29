@@ -39,7 +39,13 @@ const Contact = () => {
         </div>
 
         {/* coluna direita - detalhes */}
-        <div className="grid content-start gap-px overflow-hidden rounded-[2px] border border-line bg-line">
+        <div
+          className="grid content-start gap-px overflow-hidden rounded-[1.75rem] border border-line bg-line"
+          style={{
+            boxShadow:
+              "0 20px 40px -28px rgba(26,22,20,0.16), 0 4px 12px -8px rgba(26,22,20,0.08)",
+          }}
+        >
           <div className="bg-cream p-7">
             <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
               Atendimento

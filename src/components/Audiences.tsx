@@ -15,7 +15,13 @@ const Audiences = () => {
         </h2>
       </div>
 
-      <div className="grid gap-px overflow-hidden border border-line bg-line md:grid-cols-2">
+      <div
+        className="grid gap-px overflow-hidden rounded-[2rem] border border-line bg-line md:grid-cols-2"
+        style={{
+          boxShadow:
+            "0 24px 50px -28px rgba(26,22,20,0.18), 0 4px 14px -8px rgba(26,22,20,0.08)",
+        }}
+      >
         {/* Pacientes */}
         <article className="bg-cream p-9 md:p-12">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-burgundy">

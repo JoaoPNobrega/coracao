@@ -1,150 +1,191 @@
-// constrói N ciclos cardíacos consecutivos para um path SVG contínuo
-const buildBeats = (count: number, cycleWidth = 240) => {
-  let d = "M 0 50";
-  for (let i = 0; i < count; i++) {
-    const x = i * cycleWidth;
-    d += ` L ${x + 60} 50`;
-    d += ` Q ${x + 70} 50 ${x + 75} 40`; // P up
-    d += ` Q ${x + 80} 30 ${x + 85} 40`;
-    d += ` Q ${x + 90} 50 ${x + 95} 50`; // P down
-    d += ` L ${x + 105} 50`; // PR
-    d += ` L ${x + 110} 53`; // Q
-    d += ` L ${x + 115} 8`; // R (pico)
-    d += ` L ${x + 120} 88`; // S
-    d += ` L ${x + 125} 50`;
-    d += ` L ${x + 140} 50`; // ST
-    d += ` Q ${x + 150} 50 ${x + 158} 40`; // T up
-    d += ` Q ${x + 168} 28 ${x + 178} 40`;
-    d += ` Q ${x + 188} 50 ${x + 196} 50`;
-    d += ` L ${x + 240} 50`; // rest
+import { useEffect, useRef, useState } from "react";
+
+// monta 3 batimentos com longos repousos entre eles dentro de um viewBox 1600x200
+const buildBeatPath = () => {
+  const starts = [220, 720, 1220];
+  let d = "M 0 100";
+  for (const x of starts) {
+    d += ` L ${x} 100`;
+    d += ` L ${x + 20} 100`;
+    d += ` Q ${x + 30} 100 ${x + 38} 82`; // P sobe
+    d += ` Q ${x + 48} 65 ${x + 58} 82`;
+    d += ` Q ${x + 66} 100 ${x + 75} 100`;
+    d += ` L ${x + 90} 100`; // PR
+    d += ` L ${x + 96} 105`; // Q
+    d += ` L ${x + 103} 18`; // R (pico)
+    d += ` L ${x + 110} 180`; // S (vale)
+    d += ` L ${x + 117} 100`;
+    d += ` L ${x + 135} 100`; // ST
+    d += ` Q ${x + 150} 100 ${x + 160} 78`; // T sobe
+    d += ` Q ${x + 175} 50 ${x + 190} 78`;
+    d += ` Q ${x + 200} 100 ${x + 215} 100`;
+    d += ` L ${x + 260} 100`; // pós-T
   }
+  d += " L 1600 100";
   return d;
 };
 
-const CYCLES = 24;
-const CYCLE_WIDTH = 240;
-const TOTAL_WIDTH = CYCLES * CYCLE_WIDTH;
-const BEAT_PATH = buildBeats(CYCLES, CYCLE_WIDTH);
+const BEAT_PATH = buildBeatPath();
 
 const Pulse = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const [inView, setInView] = useState(false);
+  const [len, setLen] = useState(5000);
+
+  useEffect(() => {
+    if (pathRef.current) {
+      setLen(pathRef.current.getTotalLength());
+    }
+  }, []);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (sectionRef.current) obs.observe(sectionRef.current);
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <section
-      aria-label="Princípio"
-      className="relative isolate overflow-hidden bg-ink text-cream"
+      ref={sectionRef}
+      className="bg-cream px-6 py-[100px] sm:px-8 md:py-[140px]"
     >
-      {/* grid sutil de monitor */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.18]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, hsl(var(--cream) / 0.18) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--cream) / 0.18) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
-      {/* viñeta radial pra dar profundidade */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, transparent 0%, transparent 45%, hsl(var(--ink)) 95%)",
-        }}
-      />
-
-      <div className="relative mx-auto flex max-w-[1240px] flex-col gap-16 px-8 pt-[120px] md:gap-24 md:pt-[160px]">
-        {/* eyebrow */}
-        <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/55">
-          <span className="inline-block h-px w-7 bg-cream/40" />
-          Princípio
-          <span className="ml-auto hidden font-mono text-[10px] tracking-[0.2em] text-cream/40 md:inline">
-            LEAD II · GAIN 10mm/mV · 25mm/s
+      <div className="mx-auto max-w-[1240px]">
+        <div className="mb-10 flex items-end justify-between gap-6">
+          <div className="inline-flex items-center gap-3 font-mono text-[12px] uppercase tracking-[0.18em] text-muted">
+            <span className="inline-block h-px w-7 bg-muted" />
+            Princípio
+          </div>
+          <span className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-muted md:inline">
+            Heart Team · Cuidado Compartilhado
           </span>
         </div>
 
-        {/* frase manifesto */}
-        <h2 className="max-w-[24ch] font-display text-[clamp(40px,6.4vw,96px)] font-light leading-[1.02] tracking-[-0.025em]">
-          Toda cirurgia começa muito antes da sala — começa em uma{" "}
-          <em className="font-light italic text-ember">decisão</em> tomada em equipe.
-        </h2>
-      </div>
-
-      {/* ECG em loop contínuo, full-bleed */}
-      <div className="relative mt-20 md:mt-28">
-        {/* máscara nas bordas pra fade in/out */}
+        {/* monitor card */}
         <div
-          className="relative h-[clamp(180px,28vw,320px)] w-full overflow-hidden"
+          className="relative isolate overflow-hidden rounded-[2.5rem] border border-ink/15 bg-ink text-cream"
           style={{
-            maskImage:
-              "linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%)",
+            boxShadow:
+              "0 40px 80px -24px rgba(26,22,20,0.42), 0 12px 24px -12px rgba(26,22,20,0.28), inset 0 1px 0 0 hsl(36 33% 96% / 0.06)",
           }}
         >
-          {/* track 2x — translateX(-50%) faz loop seamless */}
+          {/* halo sutil interno */}
           <div
-            className="flex h-full w-[200%]"
+            className="pointer-events-none absolute inset-0"
             style={{
-              animation: "ecgFlow 18s linear infinite",
+              background:
+                "radial-gradient(120% 80% at 50% 110%, hsl(353 56% 50% / 0.16), transparent 60%)",
             }}
-          >
-            {[0, 1].map((i) => (
+          />
+
+          {/* top chrome */}
+          <div className="relative flex items-center justify-between border-b border-cream/10 px-7 py-5 font-mono text-[10px] uppercase tracking-[0.22em] text-cream/45 md:px-12">
+            <div className="flex items-center gap-3">
+              <span
+                className="inline-block h-2 w-2 rounded-full bg-ember"
+                style={{ animation: "ping 1.4s ease-out infinite" }}
+              />
+              <span>ECG · Derivação II · 25mm/s</span>
+            </div>
+            <span className="hidden md:inline">Spec · 003 / 2026</span>
+          </div>
+
+          {/* corpo */}
+          <div className="relative px-7 pb-10 pt-14 sm:px-10 md:px-16 md:pb-14 md:pt-20">
+            <h2 className="max-w-[22ch] font-display text-[clamp(36px,5.6vw,84px)] font-light leading-[1.02] tracking-[-0.028em]">
+              Toda cirurgia começa muito antes da sala — começa em uma{" "}
+              <em className="font-light italic text-ember">decisão</em> tomada em equipe.
+            </h2>
+
+            {/* ECG canvas */}
+            <div className="relative mt-14 h-[160px] w-full md:mt-20 md:h-[220px]">
+              {/* grid medical */}
+              <div
+                className="absolute inset-0 opacity-[0.16]"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right, hsl(var(--cream) / 0.22) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--cream) / 0.22) 1px, transparent 1px)",
+                  backgroundSize: "40px 40px",
+                  maskImage:
+                    "linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%)",
+                }}
+              />
+
               <svg
-                key={i}
-                viewBox={`0 0 ${TOTAL_WIDTH} 100`}
+                viewBox="0 0 1600 200"
                 preserveAspectRatio="none"
-                className="block h-full w-1/2 shrink-0 overflow-visible"
+                className="block h-full w-full overflow-visible"
               >
                 <path
+                  ref={pathRef}
                   d={BEAT_PATH}
                   fill="none"
                   stroke="hsl(var(--ember))"
-                  strokeWidth={1.2}
+                  strokeWidth={1.4}
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  vectorEffect="non-scaling-stroke"
                   style={{
-                    filter: "drop-shadow(0 0 10px hsl(var(--ember) / 0.55))",
+                    strokeDasharray: len,
+                    strokeDashoffset: inView ? 0 : len,
+                    transition:
+                      "stroke-dashoffset 6.2s cubic-bezier(.55,0,.18,1)",
+                    filter:
+                      "drop-shadow(0 0 10px hsl(var(--ember) / 0.55)) drop-shadow(0 0 22px hsl(var(--ember) / 0.18))",
+                    animation: inView
+                      ? "pulseStroke 1.6s ease-in-out 6.4s infinite"
+                      : undefined,
                   }}
                 />
               </svg>
+
+              {/* ponto vivo no fim */}
+              <span
+                className="absolute right-[1%] top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-ember opacity-0"
+                style={{
+                  animation: inView
+                    ? "appear .4s ease 6.4s forwards, ping 1.6s ease-out 6.4s infinite"
+                    : undefined,
+                  boxShadow: "0 0 16px hsl(var(--ember) / 0.85)",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* bottom chrome */}
+          <div className="relative grid grid-cols-2 gap-y-6 border-t border-cream/10 px-7 py-7 md:grid-cols-4 md:px-16">
+            {[
+              { k: "BPM", v: "72" },
+              { k: "Ritmo", v: "Sinusal" },
+              { k: "PR / QT", v: "160 · 380" },
+              { k: "Eixo", v: "+60°" },
+            ].map((item, i) => (
+              <div key={item.k} className={i >= 2 ? "hidden md:block" : ""}>
+                <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-cream/35">
+                  {item.k}
+                </div>
+                <div className="mt-1.5 font-display text-[26px] font-light leading-none tracking-tight">
+                  {item.v}
+                </div>
+              </div>
             ))}
           </div>
+        </div>
 
-          {/* indicador pulsante (estilo "ponto vivo" do monitor) */}
-          <span
-            className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ember"
-            style={{
-              animation: "pulseStroke 1.1s ease-in-out infinite",
-              boxShadow: "0 0 12px hsl(var(--ember) / 0.7)",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* monitor footer */}
-      <div className="relative mx-auto grid max-w-[1240px] grid-cols-2 gap-6 px-8 pb-[60px] pt-10 font-mono text-[11px] uppercase tracking-[0.18em] text-cream/55 md:grid-cols-4 md:pb-[80px]">
-        <div>
-          <div className="text-cream/35">BPM</div>
-          <div className="mt-1 font-display text-[28px] font-light not-italic text-cream">
-            72
-          </div>
-        </div>
-        <div>
-          <div className="text-cream/35">Ritmo</div>
-          <div className="mt-1 font-display text-[28px] font-light not-italic text-cream">
-            Sinusal
-          </div>
-        </div>
-        <div className="hidden md:block">
-          <div className="text-cream/35">PR / QT</div>
-          <div className="mt-1 font-display text-[28px] font-light not-italic text-cream">
-            160 · 380
-          </div>
-        </div>
-        <div className="hidden md:block">
-          <div className="text-cream/35">Eixo</div>
-          <div className="mt-1 font-display text-[28px] font-light not-italic text-cream">
-            +60°
-          </div>
-        </div>
+        {/* legenda discreta abaixo */}
+        <p className="mx-auto mt-8 max-w-[58ch] text-center font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+          Visualização ilustrativa · ritmo sinusal normal — figura decorativa
+        </p>
       </div>
     </section>
   );
