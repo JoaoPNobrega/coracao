@@ -1,0 +1,11 @@
+{
+  "frameCount": 240,
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "duration": 10,
+  "pattern": "/heart-frames/frame_%04d.webp",
+  "firstFrame": "/heart-frames/frame_0001.webp",
+  "lastFrame": "/heart-frames/frame_0240.webp",
+  "backgroundRemoved": "black keyed to alpha with colorkey=0x000000:0.08:0.06"
+}

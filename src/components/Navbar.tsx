@@ -4,22 +4,23 @@ import { Button } from "@/components/ui/button";
 const Navbar = () => {
   return (
     <nav className="flex items-center justify-between pt-7">
-      <div className="flex items-center gap-2.5 font-display text-[18px] tracking-tight">
+      <a href="#" className="flex items-center gap-2.5 font-display text-[18px] tracking-tight">
         <span className="inline-grid h-[22px] w-[22px] place-items-center text-burgundy">
           <Heart className="h-full w-full" fill="currentColor" strokeWidth={0} />
         </span>
-        Dr. Henrique Vasconcelos
-      </div>
+        Dr. Cristiano Berardo
+      </a>
 
       <div className="hidden gap-9 text-sm text-ink-soft md:flex">
-        <a href="#" className="transition-colors hover:text-burgundy">Sobre</a>
-        <a href="#" className="transition-colors hover:text-burgundy">Especialidades</a>
-        <a href="#" className="transition-colors hover:text-burgundy">Consultório</a>
-        <a href="#" className="transition-colors hover:text-burgundy">Contato</a>
+        <a href="#trajetoria" className="transition-colors hover:text-burgundy">Trajetória</a>
+        <a href="#areas" className="transition-colors hover:text-burgundy">Áreas</a>
+        <a href="#publicos" className="transition-colors hover:text-burgundy">Pacientes & médicos</a>
+        <a href="#formacao" className="transition-colors hover:text-burgundy">Formação</a>
+        <a href="#contato" className="transition-colors hover:text-burgundy">Contato</a>
       </div>
 
       <Button variant="pill" size="pill" asChild>
-        <a href="#">Agendar consulta</a>
+        <a href="#contato">Agendar avaliação</a>
       </Button>
     </nav>
   );
