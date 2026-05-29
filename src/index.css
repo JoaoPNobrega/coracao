@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn base */
+    --background: 36 33% 93%;
+    --foreground: 20 14% 9%;
+
+    --card: 36 33% 93%;
+    --card-foreground: 20 14% 9%;
+
+    --popover: 36 30% 96%;
+    --popover-foreground: 20 14% 9%;
+
+    --primary: 352 63% 33%;
+    --primary-foreground: 36 33% 96%;
+
+    --secondary: 30 18% 86%;
+    --secondary-foreground: 20 14% 9%;
+
+    --muted: 30 12% 70%;
+    --muted-foreground: 24 8% 38%;
+
+    --accent: 352 63% 33%;
+    --accent-foreground: 36 33% 96%;
+
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 36 33% 96%;
+
+    --border: 30 22% 81%;
+    --input: 30 22% 81%;
+    --ring: 352 63% 33%;
+
+    --radius: 0.5rem;
+
+    /* tema do site */
+    --cream: 36 33% 93%;        /* #f4efe8 */
+    --ink: 20 14% 9%;           /* #1a1614 */
+    --ink-soft: 24 8% 33%;      /* #5b524c */
+    --line: 32 22% 81%;         /* #d9cfc2 */
+    --burgundy: 352 63% 33%;    /* #8a1f2b */
+    --ember: 353 56% 50%;       /* #c43a4a */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html, body {
+    @apply bg-cream text-ink;
+  }
+
+  body {
+    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* paper grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    background-image:
+      radial-gradient(rgba(0, 0, 0, 0.045) 1px, transparent 1px),
+      radial-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 2px;
+    z-index: 1;
+  }
+}
